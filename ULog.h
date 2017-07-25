@@ -5,6 +5,7 @@
 #define UERROR(a) ULog::Error(ImplIT("")+a)
 #define USCRN(a) ULog::LogScreen(ImplIT("")+a)
 #define USCRC(a,c) ULog::LogScreen(ImplIT("")+a,c)
+#define MYNUM(a,b) ImplIT(L ## a, b)
 
 class ImplIT
 {
@@ -51,14 +52,16 @@ public:
 	ImplIT(float MyFloat) {	sString = FString::SanitizeFloat(MyFloat); }
 	ImplIT(FVector MyVector) { sString = MyVector.ToString(); }
 	ImplIT(FRotator MyRotator) { sString = MyRotator.ToString(); }
-	ImplIT(FString _sString) { sString = _sString; }
+	ImplIT(FName MyName) { sString = MyName.ToString(); }
+	ImplIT(FText MyText) { sString = MyText.ToString(); }
+	ImplIT(FString MyString) { sString = MyString; }
 
 	// Magic Shit Ask Rusty595
 	template<typename T>
-	ImplIT(FString enumName, T menum) { const UEnum* SlotEnum = FindObject<UEnum>(ANY_PACKAGE, *enumName); sString= SlotEnum?SlotEnum->GetEnumName(static_cast<uint32>(menum)):"77unknown77"; }
+	ImplIT(const TCHAR enumName[], T menum) { const UEnum* SlotEnum = FindObject<UEnum>(ANY_PACKAGE, enumName); sString= SlotEnum?SlotEnum->GetEnumName(static_cast<uint32>(menum)):"77unknown77"; }
 };
 
-static class /*DC_API*/ ULog
+static class ULog
 {
 public:
 	ULog(){}
