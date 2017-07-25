@@ -40,7 +40,7 @@ public:
 	FString sString;
 	FString Str() { return sString; }
 
-	// ImplIT(52) + ImplIT("MyString") = 52MyString
+	// ImplIT(52) + ImplIT("MyString") = "52MyString"
 	ImplIT operator+ (const ImplIT& iIT)
 	{
 		FString sLog;
@@ -49,7 +49,7 @@ public:
 		return ImplIT(sLog);
 	}
 
-	// ImplIT(52) + ImplIT("MyString") = 52MyString
+	// ImplIT(52) * ImplIT("MyString") = "52 MyString"
 	ImplIT operator* (const FString& _sString)
 	{
 		FString sLog;
@@ -58,7 +58,7 @@ public:
 		return ImplIT(sLog);
 	}
 
-	// ImplIT(52) * ImplIT("MyString") * 52MyString
+	// ImplIT(52) * ImplIT("MyString") = "52 MyString"
 	ImplIT operator* (const ImplIT& iIT)
 	{
 		FString sLog;
@@ -79,7 +79,7 @@ public:
 	ImplIT(FText MyText) { sString = MyText.ToString(); }
 	ImplIT(FString MyString) { sString = MyString; }
 
-	// Magic Shit Ask Rusty595
+	// Magic Shit Ask Rusty595 (Enum Support, Use MYNUM("EENumType", EnumValue) Macro!)
 	template<typename T>
 	ImplIT(const TCHAR enumName[], T menum) { const UEnum* SlotEnum = FindObject<UEnum>(ANY_PACKAGE, enumName); sString= SlotEnum?SlotEnum->GetEnumName(static_cast<uint32>(menum)):"77unknown77"; }
 };
