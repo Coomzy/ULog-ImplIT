@@ -1,34 +1,39 @@
 #pragma once
 
-#define ULOG(a) ULog::Log(ImplIT("")+a)
-#define UWARN(a) ULog::Warn(ImplIT("")+a)
-#define UERROR(a) ULog::Error(ImplIT("")+a)
-#define USCREEN(a) ULog::LogScreen(ImplIT("")+a)
-#define USCREENC(a,c) ULog::LogScreen(ImplIT("")+a,c)
-#define ULOGB(a) ULog::LogBoth(ImplIT("")+a)
-#define ULOGBC(a,c) ULog::LogBoth(ImplIT("")+a,c)
-#define UWARNB(a) ULog::WarnBoth(ImplIT("")+a)
-#define UWARNBC(a,c) ULog::WarnBoth(ImplIT("")+a,c)
-#define UERRORB(a) ULog::ErrorBoth(ImplIT("")+a)
-#define UERRORBC(a,c) ULog::ErrorBoth(ImplIT("")+a,c)
-#define MYNUM(a,b) ImplIT(L ## a, b)
-
 #pragma region USEFUL_MACROS
 
-#define NETMODE_WORLD (((GEngine == nullptr) || (GetWorld() == nullptr)) ? TEXT("") \
-        : (GEngine->GetNetMode(GetWorld()) == NM_Client) ? TEXT("[Client] ") \
-        : (GEngine->GetNetMode(GetWorld()) == NM_ListenServer) ? TEXT("[ListenServer] ") \
-        : (GEngine->GetNetMode(GetWorld()) == NM_DedicatedServer) ? TEXT("[DedicatedServer] ") \
-        : TEXT("[Standalone] "))
+#define L_NETMODE_WORLD (((GEngine == nullptr) || (GetWorld() == nullptr)) ? "" \
+        : (GEngine->GetNetMode(GetWorld()) == NM_Client) ? "[Client] " \
+        : (GEngine->GetNetMode(GetWorld()) == NM_ListenServer) ? "[ListenServer] " \
+        : (GEngine->GetNetMode(GetWorld()) == NM_DedicatedServer) ? "[DedicatedServer] " \
+        : "[Standalone] ")
 
-#define _FUNCTION_ TEXT(__FUNCTION__)
-
-#define __ROLE__ ((Role == ROLE_Authority) ? TEXT("ROLE_Authority") \
-        : (Role == ROLE_SimulatedProxy) ? TEXT("ROLE_SimulatedProxy") \
-        : (Role == ROLE_AutonomousProxy) ? TEXT("ROLE_AutonomousProxy") \
-        : TEXT("ROLE_None"))
+#define L_ROLE ((Role == ROLE_Authority) ? "ROLE_Authority" \
+        : (Role == ROLE_SimulatedProxy) ? "ROLE_SimulatedProxy" \
+        : (Role == ROLE_AutonomousProxy) ? "ROLE_AutonomousProxy" \
+        : "ROLE_None")
 
 #pragma endregion
+
+#define VERBOSE_LOGGING true
+#if VERBOSE_LOGGING
+#define LOG_PREFIX ImplIT("")+L_NETMODE_WORLD+L_ROLE+" "+__FUNCTION__+" "
+#else
+#define LOG_PREFIX ImplIT("")
+#endif
+
+#define ULOG(a) ULog::Log(LOG_PREFIX+a)
+#define UWARN(a) ULog::Warn(LOG_PREFIX+a)
+#define UERROR(a) ULog::Error(LOG_PREFIX+a)
+#define USCREEN(a) ULog::LogScreen(LOG_PREFIX+a)
+#define USCREENC(a,c) ULog::LogScreen(LOG_PREFIX+a,c)
+#define ULOGB(a) ULog::LogBoth(LOG_PREFIX+a)
+#define ULOGBC(a,c) ULog::LogBoth(LOG_PREFIX+a,c)
+#define UWARNB(a) ULog::WarnBoth(LOG_PREFIX+a)
+#define UWARNBC(a,c) ULog::WarnBoth(LOG_PREFIX+a,c)
+#define UERRORB(a) ULog::ErrorBoth(LOG_PREFIX+a)
+#define UERRORBC(a,c) ULog::ErrorBoth(LOG_PREFIX+a,c)
+#define MYENUM(a,b) ImplIT(L ## a, b)
 
 class ImplIT
 {
@@ -79,7 +84,7 @@ public:
 	ImplIT(FText MyText) { sString = MyText.ToString(); }
 	ImplIT(FString MyString) { sString = MyString; }
 
-	// Magic Shit Ask Rusty595 (Enum Support, Use MYNUM("EENumType", EnumValue) Macro!)
+	// Magic Shit Ask Rusty595 (Enum Support, Use MYENUM("EENumType", EnumValue) Macro!)
 	template<typename T>
 	ImplIT(const TCHAR enumName[], T menum) { const UEnum* SlotEnum = FindObject<UEnum>(ANY_PACKAGE, enumName); sString= SlotEnum?SlotEnum->GetEnumName(static_cast<uint32>(menum)):"77unknown77"; }
 };
