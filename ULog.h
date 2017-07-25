@@ -3,9 +3,32 @@
 #define ULOG(a) ULog::Log(ImplIT("")+a)
 #define UWARN(a) ULog::Warn(ImplIT("")+a)
 #define UERROR(a) ULog::Error(ImplIT("")+a)
-#define USCRN(a) ULog::LogScreen(ImplIT("")+a)
-#define USCRC(a,c) ULog::LogScreen(ImplIT("")+a,c)
+#define USCREEN(a) ULog::LogScreen(ImplIT("")+a)
+#define USCREENC(a,c) ULog::LogScreen(ImplIT("")+a,c)
+#define ULOGB(a) ULog::LogBoth(ImplIT("")+a)
+#define ULOGBC(a,c) ULog::LogBoth(ImplIT("")+a,c)
+#define UWARNB(a) ULog::WarnBoth(ImplIT("")+a)
+#define UWARNBC(a,c) ULog::WarnBoth(ImplIT("")+a,c)
+#define UERRORB(a) ULog::ErrorBoth(ImplIT("")+a)
+#define UERRORBC(a,c) ULog::ErrorBoth(ImplIT("")+a,c)
 #define MYNUM(a,b) ImplIT(L ## a, b)
+
+#pragma region USEFUL_MACROS
+
+#define NETMODE_WORLD (((GEngine == nullptr) || (GetWorld() == nullptr)) ? TEXT("") \
+        : (GEngine->GetNetMode(GetWorld()) == NM_Client) ? TEXT("[Client] ") \
+        : (GEngine->GetNetMode(GetWorld()) == NM_ListenServer) ? TEXT("[ListenServer] ") \
+        : (GEngine->GetNetMode(GetWorld()) == NM_DedicatedServer) ? TEXT("[DedicatedServer] ") \
+        : TEXT("[Standalone] "))
+
+#define _FUNCTION_ TEXT(__FUNCTION__)
+
+#define __ROLE__ ((Role == ROLE_Authority) ? TEXT("ROLE_Authority") \
+        : (Role == ROLE_SimulatedProxy) ? TEXT("ROLE_SimulatedProxy") \
+        : (Role == ROLE_AutonomousProxy) ? TEXT("ROLE_AutonomousProxy") \
+        : TEXT("ROLE_None"))
+
+#pragma endregion
 
 class ImplIT
 {
