@@ -15,7 +15,7 @@
 
 #pragma endregion
 
-#define VERBOSE_LOGGING true
+#define VERBOSE_LOGGING false
 #if VERBOSE_LOGGING
 #define LOG_PREFIX ImplIT("")+L_NETMODE_WORLD+L_ROLE+" "+__FUNCTION__+" "
 #else
@@ -26,14 +26,23 @@
 #define UWARN(a) ULog::Warn(LOG_PREFIX+a)
 #define UERROR(a) ULog::Error(LOG_PREFIX+a)
 #define USCREEN(a) ULog::LogScreen(LOG_PREFIX+a)
-#define USCREENC(a,c) ULog::LogScreen(LOG_PREFIX+a,c)
+#define USCREENC(a,c) ULog::LogScreen(LOG_PREFIX+a,0,c)
+#define USCREENT(a,t) ULog::LogScreen(LOG_PREFIX+a,t)
+#define USCREENTC(a,t,c) ULog::LogScreen(LOG_PREFIX+a,t,c)
 #define ULOGB(a) ULog::LogBoth(LOG_PREFIX+a)
-#define ULOGBC(a,c) ULog::LogBoth(LOG_PREFIX+a,c)
+#define ULOGBC(a,c) ULog::LogBoth(LOG_PREFIX+a,0,c)
+#define ULOGBT(a,t) ULog::LogBoth(LOG_PREFIX+a,t)
+#define ULOGBTC(a,t,c) ULog::LogBoth(LOG_PREFIX+a,t,c)
 #define UWARNB(a) ULog::WarnBoth(LOG_PREFIX+a)
-#define UWARNBC(a,c) ULog::WarnBoth(LOG_PREFIX+a,c)
+#define UWARNBC(a,c) ULog::WarnBoth(LOG_PREFIX+a,0,c)
+#define UWARNBT(a,t) ULog::WarnBoth(LOG_PREFIX+a,t)
+#define UWARNBTC(a,t,c) ULog::WarnBoth(LOG_PREFIX+a,t,c)
 #define UERRORB(a) ULog::ErrorBoth(LOG_PREFIX+a)
-#define UERRORBC(a,c) ULog::ErrorBoth(LOG_PREFIX+a,c)
+#define UERRORBC(a,c) ULog::ErrorBoth(LOG_PREFIX+a,0,c)
+#define UERRORBT(a,t) ULog::ErrorBoth(LOG_PREFIX+a,t)
+#define UERRORBTC(a,t,c) ULog::ErrorBoth(LOG_PREFIX+a,t,c)
 #define MYENUM(a,b) ImplIT(L ## a, b)
+#define UCRASH(a) ULog::Fatal(LOG_PREFIX+a)
 
 class ImplIT
 {
@@ -83,6 +92,7 @@ public:
 	ImplIT(FName MyName) { sString = MyName.ToString(); }
 	ImplIT(FText MyText) { sString = MyText.ToString(); }
 	ImplIT(FString MyString) { sString = MyString; }
+	ImplIT(AActor* MyActor) { sString = MyActor->GetName(); }
 
 	// Magic Shit Ask Rusty595 (Enum Support, Use MYENUM("EENumType", EnumValue) Macro!)
 	template<typename T>
@@ -115,29 +125,29 @@ public:
 		UE_LOG(LogClass, Fatal, TEXT("%s"), *_ImplIT.Str());
 	}
 
-	static void LogScreen(ImplIT _ImplIT, FColor _Color = FColor::Blue)
+	static void LogScreen(ImplIT _ImplIT, float _Time=0, FColor _Color = FColor::White)
 	{
 		if ( GEngine != nullptr )
 		{
-			GEngine->AddOnScreenDebugMessage(-1, 5.f, _Color, _ImplIT.Str());
+			GEngine->AddOnScreenDebugMessage(-1, _Time, _Color, _ImplIT.Str());
 		}
 	}
 
-	static void LogBoth(ImplIT _ImplIT, FColor _Color = FColor::Blue)
+	static void LogBoth(ImplIT _ImplIT, float _Time=0, FColor _Color = FColor::White)
 	{
 		Log(_ImplIT);
-		LogScreen(_ImplIT, _Color);
+		LogScreen(_ImplIT, _Time, _Color);
 	}
 
-	static void WarnBoth(ImplIT _ImplIT, FColor _Color = FColor::Yellow)
+	static void WarnBoth(ImplIT _ImplIT, float _Time = 0, FColor _Color = FColor::Yellow)
 	{
 		Warn(_ImplIT);
-		LogScreen(_ImplIT, _Color);
+		LogScreen(_ImplIT, _Time, _Color);
 	}
 
-	static void ErrorBoth(ImplIT _ImplIT, FColor _Color = FColor::Red)
+	static void ErrorBoth(ImplIT _ImplIT, float _Time = 0, FColor _Color = FColor::Red)
 	{
 		Error(_ImplIT);
-		LogScreen(_ImplIT, _Color);
+		LogScreen(_ImplIT, _Time, _Color);
 	}
 };
