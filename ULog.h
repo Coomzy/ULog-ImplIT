@@ -96,7 +96,8 @@ public:
 
 	// Magic Shit Ask Rusty595 (Enum Support, Use MYENUM("EENumType", EnumValue) Macro!)
 	template<typename T>
-	ImplIT(const TCHAR enumName[], T menum) { const UEnum* SlotEnum = FindObject<UEnum>(ANY_PACKAGE, enumName); sString= SlotEnum?SlotEnum->GetEnumName(static_cast<uint32>(menum)):"77unknown77"; }
+	// GetEnumName() was deprecated as of 4.16 // ImplIT(const TCHAR enumName[], T menum) { const UEnum* SlotEnum = FindObject<UEnum>(ANY_PACKAGE, enumName); sString= SlotEnum?SlotEnum->GetEnumName(static_cast<uint32>(menum)):"77unknown77"; }
+	ImplIT(const TCHAR enumName[], T menum) { const UEnum* SlotEnum = FindObject<UEnum>(ANY_PACKAGE, enumName); sString = SlotEnum ? SlotEnum->GetNameStringByIndex(static_cast<uint32>(menum)) : "77unknown77"; }
 };
 
 static class ULog
